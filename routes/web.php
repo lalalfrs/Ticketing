@@ -1,10 +1,18 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// The index is the sign-in page. Everything else requires an authenticated account.
-Route::view('/', 'auth.login')->middleware('guest')->name('home');
+// Index website (/) langsung menampilkan halaman login untuk pengunjung yang belum masuk,
+// dan mengarahkan pengguna yang sudah login ke halaman landing dashboard.
+Route::get('/', [AuthenticatedSessionController::class, 'create'])
+    ->middleware('guest')
+    ->name('home');
+
+Route::post('/', [AuthenticatedSessionController::class, 'store'])
+    ->middleware(['guest', 'throttle:10,1'])
+    ->name('home.login');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');

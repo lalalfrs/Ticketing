@@ -23,26 +23,76 @@
     }
 }
 
+@keyframes eagle-flight-right {
+    0% {
+        transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+    }
+    35% {
+        transform: translateX(18px) translateY(-7px) scale(1.14) rotate(14deg);
+    }
+    70% {
+        transform: translateX(36px) translateY(-4px) scale(1.08) rotate(6deg);
+    }
+    100% {
+        transform: translateX(44px) translateY(0) scale(1) rotate(0deg);
+    }
+}
+
+@keyframes eagle-flight-left {
+    0% {
+        transform: translateX(44px) translateY(0) scale(1) rotate(0deg);
+    }
+    35% {
+        transform: translateX(26px) translateY(-7px) scale(1.14) rotate(-14deg);
+    }
+    70% {
+        transform: translateX(8px) translateY(-4px) scale(1.08) rotate(-6deg);
+    }
+    100% {
+        transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+    }
+}
+
+@keyframes eagle-wing-flap {
+    0%,
+    100% {
+        transform: scaleY(1) scaleX(1);
+    }
+    25% {
+        transform: scaleY(0.62) scaleX(1.12);
+    }
+    50% {
+        transform: scaleY(1.12) scaleX(0.94);
+    }
+    75% {
+        transform: scaleY(0.68) scaleX(1.08);
+    }
+}
+
 @layer components {
-    /* Login card is the sole glass surface on the login page (antislop R-10 dose cap: 1 element). */
+    /*
+     * Frosted glassmorphism login card on the right column (antislop R-10 dose cap: 1 element).
+     * Blended over the #0F2A6B navy canvas it produces #152D68, giving >12:1 contrast for white labels
+     * and >12:1 boundary contrast for the solid white inputs inside the card.
+     */
     .auth-glass {
-        background-color: rgba(255, 255, 255, 0.84);
-        border: 1px solid rgba(15, 42, 107, 0.18);
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-        -webkit-backdrop-filter: blur(18px) saturate(140%);
-        backdrop-filter: blur(18px) saturate(140%);
+        background-color: rgba(21, 45, 104, 0.72);
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        box-shadow: 0 16px 40px rgba(6, 15, 40, 0.45);
+        -webkit-backdrop-filter: blur(22px) saturate(140%);
+        backdrop-filter: blur(22px) saturate(140%);
     }
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
         .auth-glass {
-            background-color: rgba(255, 255, 255, 0.97);
+            background-color: rgba(15, 36, 86, 0.96);
         }
     }
 
     .dark .auth-glass {
         background-color: rgba(15, 23, 42, 0.82);
         border-color: rgba(148, 163, 184, 0.35);
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
     }
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -59,5 +109,33 @@
     /* Card elevation transition per spesifikasi-desain-ui.md section 7.3 & 10. */
     .card-interactive {
         @apply transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.99] motion-reduce:transition-none motion-reduce:transform-none;
+    }
+
+    /* MNC Eagle flying theme toggle states (one-shot 550ms flight across the switch track on click). */
+    .eagle-carrier {
+        transition: transform 550ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .eagle-fly-right {
+        animation: eagle-flight-right 550ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .eagle-fly-left {
+        animation: eagle-flight-left 550ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .eagle-wings-flapping {
+        transform-origin: center center;
+        animation: eagle-wing-flap 550ms ease-in-out;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .eagle-carrier,
+        .eagle-fly-right,
+        .eagle-fly-left,
+        .eagle-wings-flapping {
+            animation: none !important;
+            transition: none !important;
+        }
     }
 }

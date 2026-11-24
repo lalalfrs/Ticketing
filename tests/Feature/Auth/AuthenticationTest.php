@@ -14,9 +14,15 @@ class AuthenticationTest extends TestCase
     {
         $this->get('/')
             ->assertOk()
-            ->assertSee('Login Page')
-            ->assertSee('Username atau email')
-            ->assertSee('images/mnc-logo-text.png', false)
+            ->assertSee('WELCOME')
+            ->assertSee('INTERNAL PORTAL')
+            ->assertSee('Username atau Email')
+            ->assertSee('images/mnc-logo.png', false)
+            ->assertSee('role="switch"', false)
+            ->assertSee('eagle-carrier', false)
+            ->assertDontSee('Forgot password')
+            ->assertDontSee('Sign in with Google')
+            ->assertDontSee('Create an Account')
             ->assertDontSee('Register');
     }
 
@@ -124,11 +130,35 @@ class AuthenticationTest extends TestCase
             ->assertOk()
             ->assertSee('id="erp-sidebar"', false)
             ->assertSee('id="sidebar-burger-btn"', false)
-            ->assertSee('Administrator')
+            ->assertSee('Selamat Datang, Administrator!')
             ->assertSee('Administrator Sistem')
             ->assertSee('Jadwal Kuliah Hari Ini')
             ->assertSee('Presensi Mahasiswa')
             ->assertSee('Kegiatan Perkuliahan')
             ->assertSee('Generate Laporan BKD');
+
+        $staff = User::factory()->create([
+            'name' => 'Staff Ticketing',
+            'username' => 'staff',
+            'email' => 'staff@ticketing.test',
+        ]);
+
+        $this->actingAs($staff)->get('/dashboard')
+            ->assertOk()
+            ->assertSee('Selamat Datang, Staff Ticketing!')
+            ->assertSee('Staf Ticketing & Akademik');
+    }
+
+    public function test_users_can_authenticate_directly_from_index_route(): void
+    {
+        $user = User::factory()->create(['username' => 'user']);
+
+        $response = $this->post('/', [
+            'login' => 'user',
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticatedAs($user);
+        $response->assertRedirect(route('dashboard', absolute: false));
     }
 }

@@ -36,10 +36,13 @@
             scheduleState: 'empty',
             openGroups: { perkuliahan: true, layanan: false, beasiswa: false, skripsi: false },
             dark: document.documentElement.classList.contains('dark'),
+            flying: false,
             toggleTheme() {
+                this.flying = true;
                 this.dark = !this.dark;
                 document.documentElement.classList.toggle('dark', this.dark);
                 try { localStorage.setItem('erp_theme', this.dark ? 'dark' : 'light'); } catch (e) {}
+                setTimeout(() => { this.flying = false; }, 560);
             },
             toggleSidebar() {
                 if (window.innerWidth < 1024) {
@@ -86,14 +89,7 @@
                                 </svg>
                             </button>
 
-                            <a href="{{ route('dashboard') }}" class="btn-interactive flex items-center gap-3 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                                <img
-                                    src="{{ asset('images/mnc-logo.png') }}"
-                                    alt="Logo MNC University"
-                                    width="557"
-                                    height="448"
-                                    class="h-[26px] w-auto lg:h-8 dark:brightness-0 dark:invert"
-                                >
+                            <a href="{{ route('dashboard') }}" class="btn-interactive flex items-center rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                                 <span class="text-base font-medium text-primary lg:hidden dark:text-white">
                                     ERP MNCU
                                 </span>
@@ -103,26 +99,8 @@
                             </a>
                         </div>
 
-                        <div class="flex items-center gap-2 md:gap-3">
-                            <button
-                                type="button"
-                                x-on:click="toggleTheme()"
-                                x-bind:aria-pressed="dark.toString()"
-                                x-bind:aria-label="dark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'"
-                                aria-label="Ganti tema tampilan"
-                                class="btn-interactive inline-flex h-11 items-center gap-2 rounded-md border border-slate-400 bg-subtle px-3 text-[13px] font-medium text-ink hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
-                            >
-                                <svg x-show="!dark" aria-hidden="true" class="h-4 w-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z" />
-                                </svg>
-                                <svg x-show="dark" x-cloak aria-hidden="true" class="h-4 w-4 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                    <circle cx="12" cy="12" r="4" />
-                                    <path stroke-linecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-                                </svg>
-                                <span class="hidden sm:inline" x-text="dark ? 'Terang' : 'Gelap'">Gelap</span>
-                            </button>
-
-                            {{-- User dropdown per spesifikasi-desain-ui.md section 4.1 - 4.3 --}}
+                        <div class="flex items-center gap-3 md:gap-4">
+                            {{-- User dropdown di sebelah kiri tombol toggle tema --}}
                             <div class="relative" x-on:click.outside="userMenuOpen = false">
                                 <button
                                     type="button"
@@ -211,6 +189,9 @@
                                     </div>
                                 </div>
                             </div>
+
+                            {{-- Tombol toggle Dark/Light Mode di posisi paling kanan navbar --}}
+                            <x-theme-toggle />
                         </div>
                     </div>
                 </header>

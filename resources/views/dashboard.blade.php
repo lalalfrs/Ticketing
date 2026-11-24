@@ -5,38 +5,65 @@
         'staff' => 'Staf Ticketing & Akademik',
         default => 'Pengguna Internal',
     };
+    $roleWelcomeNote = match ($currentUser->username) {
+        'admin' => 'Kelola operasional akademik, pantau jadwal perkuliahan, dan akses laporan institusi dari satu tempat.',
+        'staff' => 'Pantau tiket layanan mahasiswa, jadwal perkuliahan harian, serta kelola materi dan presensi semester ini.',
+        default => 'Berikut ringkasan jadwal, presensi, dan akses cepat modul akademik Anda untuk semester aktif.',
+    };
 @endphp
 
 <x-app-layout title="Dashboard">
-    {{-- Section 6: Page Header per spesifikasi-desain-ui.md --}}
+    {{-- Section 6: Welcoming & Larger Page Header per user request & spesifikasi-desain-ui.md --}}
     <x-slot name="header">
-        <div class="flex flex-col gap-4 border-b-2 border-primary pb-6 sm:flex-row sm:items-end sm:justify-between dark:border-sky-400">
-            <div>
-                <h1
-                    class="text-lg font-normal text-ink-secondary md:text-2xl lg:text-[28px] dark:text-slate-100"
-                    x-text="activeFeatureLabel"
-                >
-                    Dashboard Utama
-                </h1>
-                <p class="mt-1.5 text-[13px] text-ink-muted md:text-sm dark:text-slate-300">
-                    Selamat datang, <span class="font-medium text-primary dark:text-sky-300">{{ $currentUser->name }}</span>
-                    ({{ $roleLabel }} · {{ $currentUser->email }})
-                </p>
-            </div>
+        <div class="rounded-lg border border-line bg-white p-6 shadow-sm md:p-8 lg:p-10 dark:border-slate-800 dark:bg-slate-900">
+            <div class="flex flex-col gap-6 border-b-2 border-primary pb-6 lg:flex-row lg:items-center lg:justify-between lg:pb-8 dark:border-sky-400">
+                <div class="space-y-3">
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <span class="inline-flex items-center rounded-sm bg-primary px-3 py-1 text-xs font-semibold text-white md:text-sm dark:bg-sky-400 dark:text-slate-950">
+                            {{ $roleLabel }}
+                        </span>
+                        <span class="inline-flex items-center rounded-sm border border-slate-300 bg-subtle px-3 py-1 text-xs font-medium text-ink-secondary md:text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                            ID: {{ strtoupper($currentUser->username ?? 'USER') }} · {{ $currentUser->email }}
+                        </span>
+                    </div>
 
-            <div class="flex items-center gap-2.5 sm:text-right">
-                <svg aria-hidden="true" class="h-[22px] w-[22px] shrink-0 text-[#4F46E5] dark:text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <rect x="3" y="5" width="18" height="16" rx="2" />
-                    <path stroke-linecap="round" d="M16 3v4M8 3v4M3 10h18" />
-                </svg>
-                <div>
-                    <p class="text-base font-semibold leading-tight text-ink lg:text-2xl dark:text-white">
-                        2026/2027
-                    </p>
-                    <p class="text-sm font-medium text-ink-secondary lg:text-lg dark:text-slate-300">
-                        Semester Ganjil
+                    <h1 class="text-2xl font-semibold tracking-tight text-primary sm:text-3xl md:text-4xl lg:text-[42px] lg:leading-[1.15] dark:text-white">
+                        Selamat Datang, {{ $currentUser->name }}!
+                    </h1>
+
+                    <p class="max-w-3xl text-sm leading-relaxed text-ink-secondary md:text-base lg:text-lg dark:text-slate-300">
+                        {{ $roleWelcomeNote }}
                     </p>
                 </div>
+
+                <div class="flex shrink-0 items-center gap-3.5 self-start rounded-md border border-line bg-subtle px-5 py-4 lg:self-center dark:border-slate-700 dark:bg-slate-800/80">
+                    <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-indigo-50 text-[#4F46E5] dark:bg-slate-700 dark:text-indigo-300">
+                        <svg aria-hidden="true" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <rect x="3" y="5" width="18" height="16" rx="2" />
+                            <path stroke-linecap="round" d="M16 3v4M8 3v4M3 10h18" />
+                        </svg>
+                    </span>
+                    <div>
+                        <p class="text-xs font-medium text-ink-muted md:text-[13px] dark:text-slate-400">
+                            Periode Akademik Aktif
+                        </p>
+                        <p class="text-xl font-semibold leading-tight text-ink lg:text-2xl dark:text-white">
+                            2026/2027
+                        </p>
+                        <p class="text-sm font-medium text-primary lg:text-base dark:text-sky-300">
+                            Semester Ganjil
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-ink-muted md:text-sm dark:text-slate-300">
+                <p>
+                    Modul aktif: <span class="font-semibold text-primary dark:text-sky-300" x-text="activeFeatureLabel">Dashboard Utama</span>
+                </p>
+                <p>
+                    Status sesi: Terautentikasi di Portal ERP Internal MNC University
+                </p>
             </div>
         </div>
     </x-slot>
