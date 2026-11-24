@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    [x-cloak] {
+        display: none !important;
+    }
+
+    a[href],
+    button:not(:disabled),
+    summary,
+    select,
+    label[for],
+    input[type='checkbox'],
+    input[type='radio'] {
+        cursor: pointer;
+    }
+
+    button:disabled,
+    input:disabled {
+        cursor: not-allowed;
+    }
+}
+
+@layer components {
+    /* Login card is the sole glass surface on the login page (antislop R-10 dose cap: 1 element). */
+    .auth-glass {
+        background-color: rgba(255, 255, 255, 0.84);
+        border: 1px solid rgba(15, 42, 107, 0.18);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        backdrop-filter: blur(18px) saturate(140%);
+    }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        .auth-glass {
+            background-color: rgba(255, 255, 255, 0.97);
+        }
+    }
+
+    .dark .auth-glass {
+        background-color: rgba(15, 23, 42, 0.82);
+        border-color: rgba(148, 163, 184, 0.35);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        .dark .auth-glass {
+            background-color: rgba(15, 23, 42, 0.97);
+        }
+    }
+
+    /* Interactive button transition utility with tactile hover and active press feedback. */
+    .btn-interactive {
+        @apply transition-all duration-200 ease-out active:scale-[0.97] motion-reduce:transition-none motion-reduce:transform-none;
+    }
+
+    /* Card elevation transition per spesifikasi-desain-ui.md section 7.3 & 10. */
+    .card-interactive {
+        @apply transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.99] motion-reduce:transition-none motion-reduce:transform-none;
+    }
+}
